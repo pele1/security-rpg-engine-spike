@@ -56,3 +56,15 @@ export function Receptionist(): EventDefinition {
     }
   }
 }
+
+export function SecureDoor(): EventDefinition {
+  return {
+    onInit() {
+      this.setGraphic('secure-door')
+    },
+    async onAction(player: RpgPlayer) {
+      player.showNotification('ACCESS CONTROLLED · Badge required')
+      await player.showText('The development area is protected by badge access. Visitors must be verified before entering.')
+    }
+  }
+}
