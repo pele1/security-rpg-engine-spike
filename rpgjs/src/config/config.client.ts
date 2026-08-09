@@ -12,7 +12,8 @@ export default {
         spritesheets: [
           { id: 'hero', image: 'spritesheets/hero.svg', ...Presets.RMSpritesheet(3, 4) },
           { id: 'visitor', image: 'spritesheets/visitor.svg', ...Presets.RMSpritesheet(3, 4) },
-          { id: 'receptionist', image: 'spritesheets/receptionist.svg', ...Presets.RMSpritesheet(3, 4) }
+          { id: 'receptionist', image: 'spritesheets/receptionist.svg', ...Presets.RMSpritesheet(3, 4) },
+          { id: 'secure-door', image: 'spritesheets/secure-door.svg', ...Presets.RMSpritesheet(3, 4) }
         ]
       }
     ])
