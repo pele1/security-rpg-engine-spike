@@ -1,0 +1,32 @@
+{
+  "name": "security-rpg-engine-spike-rpgjs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync:shared": "node scripts/sync-shared.mjs",
+    "predev": "npm run sync:shared",
+    "dev": "vite",
+    "prebuild": "npm run sync:shared",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@rpgjs/action-battle": "5.0.0-beta.29",
+    "@rpgjs/client": "5.0.0-beta.29",
+    "@rpgjs/common": "5.0.0-beta.27",
+    "@rpgjs/server": "5.0.0-beta.29",
+    "@rpgjs/tiledmap": "5.0.0-beta.29",
+    "@rpgjs/ui-css": "5.0.0-beta.25",
+    "@rpgjs/vite": "5.0.0-beta.29",
+    "@signe/di": "^3.1.1",
+    "canvasengine": "2.1.1",
+    "pixi.js": "^8.19.0"
+  },
+  "devDependencies": {
+    "@canvasengine/compiler": "2.1.0",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "path-browserify": "^1.0.1",
+    "vite": "^8.2.0"
+  }
+}
