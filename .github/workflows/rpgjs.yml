@@ -34,6 +34,4 @@ jobs:
           test -f dist/index.html
           test -f dist/data/scenario.json
           test -f dist/map/office-lobby.tmx
-          test -f dist/mobile-controls.css
-          test -f dist/mobile-controls.js
-          grep -q 'mobile-controls.js' dist/index.html
+          ! grep -q 'mobile-controls.js' dist/index.html
