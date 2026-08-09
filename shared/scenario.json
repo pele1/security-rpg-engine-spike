@@ -1,0 +1,151 @@
+{
+  "$schema": "./scenario.schema.json",
+  "id": "badge-incident",
+  "title": "Badge Incident",
+  "version": 1,
+  "targetPlaytimeMinutes": {
+    "min": 2,
+    "max": 4
+  },
+  "presentation": {
+    "camera": "isometric",
+    "setting": "modern-software-office"
+  },
+  "startScene": "office-lobby",
+  "initialObjective": "Get to your desk in the developer area.",
+  "flags": {
+    "visitorVerified": false,
+    "visitorAdmitted": false,
+    "visitorClaimChecked": false
+  },
+  "characters": [
+    {
+      "id": "player",
+      "name": "Alex",
+      "role": "employee",
+      "asset": "player_employee",
+      "start": { "x": 3, "y": 8 }
+    },
+    {
+      "id": "visitor",
+      "name": "Visitor",
+      "role": "external",
+      "asset": "visitor_external",
+      "start": { "x": 8, "y": 5 }
+    },
+    {
+      "id": "receptionist",
+      "name": "Receptionist",
+      "role": "reception",
+      "asset": "receptionist",
+      "start": { "x": 4, "y": 4 }
+    }
+  ],
+  "locations": [
+    {
+      "id": "reception",
+      "type": "public-area",
+      "position": { "x": 4, "y": 4 }
+    },
+    {
+      "id": "secure-door",
+      "type": "controlled-boundary",
+      "asset": "secure_badge_door",
+      "position": { "x": 9, "y": 4 },
+      "initialState": "locked"
+    },
+    {
+      "id": "developer-area",
+      "type": "restricted-area",
+      "position": { "x": 11, "y": 3 }
+    }
+  ],
+  "dialogues": {
+    "visitor-entry": {
+      "speaker": "visitor",
+      "text": "Hey, perfect timing. My badge stopped working again. Could you let me through? I'm already late for the DevOps meeting.",
+      "choices": [
+        {
+          "id": "admit",
+          "text": "Sure, I'll let you in.",
+          "action": "admit-visitor"
+        },
+        {
+          "id": "reception",
+          "text": "Please check with reception first.",
+          "action": "send-to-reception"
+        },
+        {
+          "id": "ask-meeting",
+          "text": "Who are you meeting?",
+          "next": "visitor-meeting-claim"
+        }
+      ]
+    },
+    "visitor-meeting-claim": {
+      "speaker": "visitor",
+      "text": "Daniel from DevOps. He told me to come straight up if reception was busy.",
+      "choices": [
+        {
+          "id": "trust-claim",
+          "text": "Okay, come through.",
+          "action": "admit-visitor"
+        },
+        {
+          "id": "verify-reception",
+          "text": "I'll verify that with reception.",
+          "action": "verify-with-reception"
+        }
+      ]
+    }
+  },
+  "actions": {
+    "admit-visitor": {
+      "setFlags": {
+        "visitorAdmitted": true
+      },
+      "doorState": "open",
+      "outcome": "unsafe_access_granted"
+    },
+    "send-to-reception": {
+      "setFlags": {
+        "visitorVerified": true
+      },
+      "doorState": "locked",
+      "outcome": "verified_process"
+    },
+    "verify-with-reception": {
+      "setFlags": {
+        "visitorClaimChecked": true,
+        "visitorVerified": true
+      },
+      "doorState": "locked",
+      "outcome": "verified_process"
+    }
+  },
+  "outcomes": {
+    "unsafe_access_granted": {
+      "delaySeconds": 3,
+      "feedback": "A security notification reports an unidentified visitor near a development workstation.",
+      "tone": "contextual"
+    },
+    "verified_process": {
+      "delaySeconds": 1,
+      "feedback": "Reception takes over the visitor check and the secure area remains controlled.",
+      "tone": "contextual"
+    }
+  },
+  "assets": [
+    "player_employee",
+    "visitor_external",
+    "receptionist",
+    "secure_badge_door",
+    "office_floor_tiles",
+    "office_wall_tiles",
+    "developer_workstation",
+    "reception_desk",
+    "badge_denied_sfx",
+    "badge_granted_sfx",
+    "office_ambient"
+  ]
+}
