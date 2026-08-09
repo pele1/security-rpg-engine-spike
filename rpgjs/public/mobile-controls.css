@@ -1,0 +1,134 @@
+#mobile-controls {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10000;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+#mobile-controls .control-cluster {
+  position: absolute;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+#mobile-controls .dpad {
+  left: max(18px, env(safe-area-inset-left));
+  width: 168px;
+  height: 168px;
+  display: grid;
+  grid-template-columns: repeat(3, 52px);
+  grid-template-rows: repeat(3, 52px);
+  gap: 6px;
+  align-items: center;
+  justify-items: center;
+}
+
+#mobile-controls .actions {
+  right: max(22px, env(safe-area-inset-right));
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+#mobile-controls button {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(13, 28, 36, 0.74);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  outline: none;
+  touch-action: none;
+}
+
+#mobile-controls button:active,
+#mobile-controls button.is-pressed {
+  transform: scale(0.94);
+  background: rgba(25, 85, 103, 0.9);
+}
+
+#mobile-controls .dpad button {
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  font-size: 24px;
+  line-height: 1;
+}
+
+#mobile-controls .dpad .up { grid-column: 2; grid-row: 1; }
+#mobile-controls .dpad .left { grid-column: 1; grid-row: 2; }
+#mobile-controls .dpad .center {
+  grid-column: 2;
+  grid-row: 2;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.45;
+  background: rgba(255, 255, 255, 0.08);
+}
+#mobile-controls .dpad .right { grid-column: 3; grid-row: 2; }
+#mobile-controls .dpad .down { grid-column: 2; grid-row: 3; }
+
+#mobile-controls .action-button {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  background: rgba(20, 104, 115, 0.84);
+}
+
+#mobile-controls .action-label {
+  position: absolute;
+  right: max(28px, env(safe-area-inset-right));
+  bottom: calc(max(20px, env(safe-area-inset-bottom)) + 82px);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #mobile-controls {
+    display: none;
+  }
+}
+
+@media (max-width: 430px) {
+  #mobile-controls .dpad {
+    width: 144px;
+    height: 144px;
+    grid-template-columns: repeat(3, 44px);
+    grid-template-rows: repeat(3, 44px);
+    gap: 6px;
+  }
+
+  #mobile-controls .dpad button {
+    width: 44px;
+    height: 44px;
+    border-radius: 15px;
+    font-size: 20px;
+  }
+
+  #mobile-controls .dpad .center {
+    width: 34px;
+    height: 34px;
+  }
+
+  #mobile-controls .action-button {
+    width: 68px;
+    height: 68px;
+    font-size: 13px;
+  }
+}
