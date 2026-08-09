@@ -1,41 +1,44 @@
-const KEY_BY_DIRECTION = {
-  up: 'ArrowUp',
-  down: 'ArrowDown',
-  left: 'ArrowLeft',
-  right: 'ArrowRight'
+const CONTROL_BY_DIRECTION = {
+  up: 'Up',
+  down: 'Down',
+  left: 'Left',
+  right: 'Right'
 }
 
-function dispatchKey(type, key, code = key) {
-  const event = new KeyboardEvent(type, {
-    key,
-    code,
-    bubbles: true,
-    cancelable: true
-  })
-  window.dispatchEvent(event)
-  document.dispatchEvent(event)
+function applyRpgControl(control, isDown = true) {
+  const apply = window.__rpgjsTouchControl
+  if (typeof apply !== 'function') return false
+  apply(control, isDown)
+  return true
 }
 
 function releaseAllDirections() {
-  Object.values(KEY_BY_DIRECTION).forEach((key) => dispatchKey('keyup', key))
+  Object.values(CONTROL_BY_DIRECTION).forEach((control) => applyRpgControl(control, false))
 }
 
-function bindHoldButton(button, key) {
+function bindHoldButton(button, control) {
   let activePointer = null
+  let repeatTimer = null
+
+  const pulse = () => applyRpgControl(control, true)
 
   const press = (event) => {
     event.preventDefault()
     activePointer = event.pointerId
     button.setPointerCapture?.(event.pointerId)
     button.classList.add('is-pressed')
-    dispatchKey('keydown', key)
+
+    pulse()
+    repeatTimer = window.setInterval(pulse, 80)
   }
 
   const release = (event) => {
     if (activePointer !== null && event.pointerId !== activePointer) return
     event.preventDefault()
     button.classList.remove('is-pressed')
-    dispatchKey('keyup', key)
+    window.clearInterval(repeatTimer)
+    repeatTimer = null
+    applyRpgControl(control, false)
     activePointer = null
   }
 
@@ -44,7 +47,9 @@ function bindHoldButton(button, key) {
   button.addEventListener('pointercancel', release)
   button.addEventListener('lostpointercapture', () => {
     button.classList.remove('is-pressed')
-    dispatchKey('keyup', key)
+    window.clearInterval(repeatTimer)
+    repeatTimer = null
+    applyRpgControl(control, false)
     activePointer = null
   })
 }
@@ -53,18 +58,21 @@ function bindActionButton(button) {
   const trigger = (event) => {
     event.preventDefault()
     button.classList.add('is-pressed')
-
-    // RPG-style defaults commonly use Enter/Space for interaction.
-    // Dispatch both in sequence so the mobile shim stays engine-lightweight.
-    dispatchKey('keydown', 'Enter', 'Enter')
-    dispatchKey('keyup', 'Enter', 'Enter')
-    dispatchKey('keydown', ' ', 'Space')
-    dispatchKey('keyup', ' ', 'Space')
-
-    window.setTimeout(() => button.classList.remove('is-pressed'), 100)
+    applyRpgControl('Action', true)
+    window.setTimeout(() => {
+      applyRpgControl('Action', false)
+      button.classList.remove('is-pressed')
+    }, 100)
   }
 
   button.addEventListener('pointerdown', trigger)
+}
+
+function setControlReadiness(controls) {
+  const ready = typeof window.__rpgjsTouchControl === 'function'
+  controls.classList.toggle('is-ready', ready)
+  controls.classList.toggle('is-waiting', !ready)
+  return ready
 }
 
 function mountMobileControls() {
@@ -72,6 +80,7 @@ function mountMobileControls() {
 
   const controls = document.createElement('div')
   controls.id = 'mobile-controls'
+  controls.className = 'is-waiting'
   controls.setAttribute('aria-label', 'Touch controls')
   controls.innerHTML = `
     <div class="control-cluster dpad" aria-label="Movement">
@@ -89,10 +98,15 @@ function mountMobileControls() {
 
   document.body.appendChild(controls)
 
-  Object.entries(KEY_BY_DIRECTION).forEach(([direction, key]) => {
-    bindHoldButton(controls.querySelector(`.${direction}`), key)
+  Object.entries(CONTROL_BY_DIRECTION).forEach(([direction, control]) => {
+    bindHoldButton(controls.querySelector(`.${direction}`), control)
   })
   bindActionButton(controls.querySelector('.action-button'))
+
+  const readinessTimer = window.setInterval(() => {
+    if (setControlReadiness(controls)) window.clearInterval(readinessTimer)
+  }, 100)
+  setControlReadiness(controls)
 
   window.addEventListener('blur', releaseAllDirections)
   document.addEventListener('visibilitychange', () => {
