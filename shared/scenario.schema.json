@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/security-rpg/scenario.schema.json",
+  "title": "Security RPG Spike Scenario",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "version",
+    "presentation",
+    "startScene",
+    "initialObjective",
+    "characters",
+    "locations",
+    "dialogues",
+    "actions",
+    "outcomes",
+    "assets"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "version": { "type": "integer", "minimum": 1 },
+    "targetPlaytimeMinutes": {
+      "type": "object",
+      "required": ["min", "max"],
+      "properties": {
+        "min": { "type": "number", "minimum": 0 },
+        "max": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "presentation": {
+      "type": "object",
+      "required": ["camera", "setting"],
+      "properties": {
+        "camera": { "const": "isometric" },
+        "setting": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "startScene": { "type": "string" },
+    "initialObjective": { "type": "string" },
+    "flags": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["boolean", "string", "number", "null"]
+      }
+    },
+    "characters": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "role", "asset", "start"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "role": { "type": "string" },
+          "asset": { "type": "string" },
+          "start": { "$ref": "#/$defs/point" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "locations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "position"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string" },
+          "asset": { "type": "string" },
+          "position": { "$ref": "#/$defs/point" },
+          "initialState": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "dialogues": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/dialogue" }
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "setFlags": {
+            "type": "object",
+            "additionalProperties": {
+              "type": ["boolean", "string", "number", "null"]
+            }
+          },
+          "doorState": { "type": "string" },
+          "outcome": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "outcomes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["feedback"],
+        "properties": {
+          "delaySeconds": { "type": "number", "minimum": 0 },
+          "feedback": { "type": "string" },
+          "tone": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "point": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "dialogue": {
+      "type": "object",
+      "required": ["speaker", "text", "choices"],
+      "properties": {
+        "speaker": { "type": "string" },
+        "text": { "type": "string" },
+        "choices": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "text"],
+            "properties": {
+              "id": { "type": "string" },
+              "text": { "type": "string" },
+              "action": { "type": "string" },
+              "next": { "type": "string" },
+              "requires": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "anyOf": [
+              { "required": ["action"] },
+              { "required": ["next"] }
+            ],
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
