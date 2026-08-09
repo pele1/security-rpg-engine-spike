@@ -1,0 +1,67 @@
+name: Deploy RPGJS to GitHub Pages
+
+on:
+  pull_request:
+    paths:
+      - 'rpgjs/**'
+      - 'shared/**'
+      - '.github/workflows/pages.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'rpgjs/**'
+      - 'shared/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rpgjs
+    env:
+      GITHUB_PAGES: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: rpgjs/package.json
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build Pages version
+        run: npm run build
+      - name: Verify Pages output
+        run: |
+          test -f dist/index.html
+          test -f dist/data/scenario.json
+          test -f dist/map/office-lobby.tmx
+          grep -q '/security-rpg-engine-spike/' dist/index.html
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: rpgjs/dist
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
