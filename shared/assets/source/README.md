@@ -1,0 +1,1 @@
+Reference images to be used as source for actual assets. The images can be used to cut out specific graphical assets for usage in the game. Could also be used as visual reference to generate new images. 
