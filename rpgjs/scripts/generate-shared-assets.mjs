@@ -1,5 +1,5 @@
-import { mkdir, readFile, writeFile, copyFile } from 'node:fs/promises'
-import { dirname, resolve } from 'node:path'
+import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises'
+import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 
@@ -9,9 +9,10 @@ const repoRoot = resolve(projectRoot, '..')
 const sharedRoot = resolve(repoRoot, 'shared', 'assets')
 const manifest = JSON.parse(await readFile(resolve(sharedRoot, 'manifest.json'), 'utf8'))
 const source = resolve(sharedRoot, manifest.source)
-const generatedRoot = resolve(projectRoot, 'public', 'assets', 'shared')
-const tiledGenerated = resolve(projectRoot, 'src', 'tiled', 'office-lobby-backdrop.png')
+const generatedRoot = resolve(sharedRoot, 'generated')
+const checkOnly = process.argv.includes('--check')
 
+if (!checkOnly) await rm(generatedRoot, { recursive: true, force: true })
 await mkdir(generatedRoot, { recursive: true })
 
 const sourceMeta = await sharp(source).metadata()
@@ -72,7 +73,14 @@ for (const asset of manifest.assets) {
     .png()
     .toBuffer()
 
-  await writeFile(target, buffer)
+  if (checkOnly) {
+    const committed = await readFile(target).catch(() => null)
+    if (!committed || !committed.equals(buffer)) {
+      throw new Error(`Committed asset is missing or stale: ${asset.path}`)
+    }
+  } else {
+    await writeFile(target, buffer)
+  }
   generated.set(asset.id, { target, buffer })
 }
 
@@ -118,11 +126,27 @@ for (const placement of manifest.scene.placements) {
 
 const sceneTarget = resolve(generatedRoot, manifest.scene.output)
 await mkdir(dirname(sceneTarget), { recursive: true })
-await sharp({ create: { width: sceneWidth, height: sceneHeight, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+const sceneBuffer = await sharp({ create: { width: sceneWidth, height: sceneHeight, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
   .composite(composites)
   .png()
-  .toFile(sceneTarget)
+  .toBuffer()
 
-await copyFile(sceneTarget, tiledGenerated)
-console.log(`Generated ${manifest.assets.length} shared assets and ${manifest.scene.output}`)
-console.log(`Synced scene backdrop -> ${tiledGenerated}`)
+if (checkOnly) {
+  const committed = await readFile(sceneTarget).catch(() => null)
+  if (!committed || !committed.equals(sceneBuffer)) {
+    throw new Error(`Committed scene is missing or stale: ${manifest.scene.output}`)
+  }
+  console.log(`Verified ${manifest.assets.length} committed assets and ${manifest.scene.output}`)
+} else {
+  await writeFile(sceneTarget, sceneBuffer)
+  console.log(`Generated ${manifest.assets.length} committed assets and ${manifest.scene.output}`)
+}
+
+if (checkOnly) {
+  const expectedPaths = new Set([...manifest.assets.map(({ path }) => path), manifest.scene.output])
+  const committedPaths = (await readdir(generatedRoot, { recursive: true, withFileTypes: true }))
+    .filter((entry) => entry.isFile())
+    .map((entry) => relative(generatedRoot, resolve(entry.parentPath, entry.name)))
+  const unexpected = committedPaths.filter((path) => !expectedPaths.has(path))
+  if (unexpected.length) throw new Error(`Unexpected committed assets: ${unexpected.join(', ')}`)
+}

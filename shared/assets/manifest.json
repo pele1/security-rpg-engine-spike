@@ -6,37 +6,19 @@
     { "id": "reception-desk", "path": "environment/office/reception-desk.png", "crop": [1135, 18, 399, 274], "tags": ["office", "furniture", "reception"] },
     { "id": "secure-door", "path": "environment/access-control/secure-door.png", "crop": [24, 327, 228, 323], "tags": ["access-control", "door", "secure"] },
     { "id": "security-gate", "path": "environment/access-control/security-gate.png", "crop": [255, 330, 225, 175], "tags": ["access-control", "gate", "glass"] },
-    { "id": "security-sign-wall", "path": "environment/office/security-sign-wall.png", "crop": [735, 10, 257, 185], "tags": ["signage", "security"] },
-    { "id": "security-poster-tower", "path": "environment/office/security-poster-tower.png", "crop": [730, 145, 150, 255], "tags": ["signage", "security", "awareness"] },
-    { "id": "sofa-area", "path": "environment/furniture/sofa-area.png", "crop": [815, 245, 330, 260], "tags": ["furniture", "lounge"] },
-    { "id": "workstation-single", "path": "environment/furniture/workstation-single.png", "crop": [555, 360, 210, 180], "tags": ["furniture", "desk", "workstation"] },
     { "id": "workstation-cluster", "path": "environment/furniture/workstation-cluster.png", "crop": [575, 455, 365, 280], "tags": ["furniture", "desk", "developer"] },
-    { "id": "meeting-table", "path": "environment/furniture/meeting-table.png", "crop": [920, 490, 255, 225], "tags": ["furniture", "meeting"] },
-    { "id": "glass-meeting-room", "path": "environment/architecture/glass-meeting-room.png", "crop": [1178, 440, 350, 300], "tags": ["architecture", "glass", "meeting"] },
-    { "id": "storage-shelf", "path": "environment/office/storage-shelf.png", "crop": [20, 660, 135, 200], "tags": ["office", "storage"] },
-    { "id": "server-racks", "path": "environment/office/server-racks.png", "crop": [155, 690, 290, 220], "tags": ["office", "server", "it"] },
-    { "id": "plants-set", "path": "environment/plants/plants-set.png", "crop": [470, 690, 285, 220], "tags": ["plants", "decor"] },
-    { "id": "glass-windows", "path": "environment/architecture/glass-windows.png", "crop": [810, 700, 365, 210], "tags": ["architecture", "glass", "window"] },
-    { "id": "stairs", "path": "environment/architecture/stairs.png", "crop": [790, 790, 225, 195], "tags": ["architecture", "stairs"] },
-    { "id": "interaction-icons", "path": "ui/interaction-icons.png", "crop": [1280, 735, 220, 210], "tags": ["ui", "interaction"] },
-    { "id": "floor-tiles", "path": "tiles/floor-tiles.png", "crop": [0, 850, 795, 174], "tags": ["tiles", "floor"] }
+    { "id": "plants-set", "path": "environment/plants/plants-set.png", "crop": [470, 690, 285, 220], "tags": ["plants", "decor"] }
   ],
   "scene": {
     "id": "office-lobby",
     "output": "scene/office-lobby-backdrop.png",
     "size": [900, 560],
     "placements": [
-      { "asset": "security-sign-wall", "x": 90, "y": 78, "width": 230 },
       { "asset": "reception-desk", "x": 128, "y": 150, "width": 330 },
-      { "asset": "sofa-area", "x": 52, "y": 294, "width": 265 },
-      { "asset": "security-poster-tower", "x": 18, "y": 150, "width": 105 },
       { "asset": "secure-door", "x": 548, "y": 92, "width": 218 },
       { "asset": "security-gate", "x": 610, "y": 330, "width": 180 },
       { "asset": "workstation-cluster", "x": 650, "y": 205, "width": 235 },
-      { "asset": "glass-meeting-room", "x": 678, "y": 50, "width": 220 },
-      { "asset": "server-racks", "x": 770, "y": 330, "width": 125 },
-      { "asset": "plants-set", "x": 350, "y": 330, "width": 195 },
-      { "asset": "glass-windows", "x": 515, "y": 28, "width": 210 }
+      { "asset": "plants-set", "x": 350, "y": 330, "width": 195 }
     ]
   }
 }

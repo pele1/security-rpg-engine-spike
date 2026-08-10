@@ -33,6 +33,8 @@ jobs:
       GITHUB_PAGES: 'true'
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -40,6 +42,8 @@ jobs:
           cache-dependency-path: rpgjs/package.json
       - name: Install dependencies
         run: npm install --no-audit --no-fund
+      - name: Verify committed shared assets
+        run: npm run verify:assets
       - name: Build Pages version
         run: npm run build
       - name: Verify Pages output
