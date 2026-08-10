@@ -1,0 +1,72 @@
+name: Generate and commit shared assets
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'agent/**'
+    paths:
+      - 'shared/assets/source/**'
+      - 'shared/assets/manifest.json'
+      - 'rpgjs/scripts/generate-shared-assets.mjs'
+      - '.github/workflows/generate-assets.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: generate-assets-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out current branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: rpgjs/package.json
+
+      - name: Install generator dependencies
+        working-directory: rpgjs
+        run: npm install --no-audit --no-fund
+
+      - name: Generate reviewable shared assets
+        working-directory: rpgjs
+        run: npm run generate:assets
+
+      - name: Show generated files
+        run: find shared/assets/generated -type f -maxdepth 8 -print | sort
+
+      - name: Commit generated binary assets
+        id: commit
+        shell: bash
+        run: |
+          if git diff --quiet -- shared/assets/generated && [ -z "$(git ls-files --others --exclude-standard shared/assets/generated)" ]; then
+            echo "No generated asset changes to commit."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add shared/assets/generated
+          git commit -m "Generate shared visual assets"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Summary
+        run: |
+          echo "### Shared asset generation" >> "$GITHUB_STEP_SUMMARY"
+          echo "Branch: \`${GITHUB_REF_NAME}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Generated assets committed: \`${{ steps.commit.outputs.changed }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "The PNG files under \`shared/assets/generated/\` are now normal Git-tracked files and can be reviewed directly in GitHub." >> "$GITHUB_STEP_SUMMARY"
