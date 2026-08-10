@@ -4,12 +4,12 @@
  <tileset firstgid="5" source="office-props.tsx"/>
  <tileset firstgid="13" source="office-backdrop.tsx"/>
  <objectgroup id="3" name="Visual Backdrop" draworder="index">
-  <object id="5" name="office-backdrop" gid="13" x="0" y="480" width="768" height="480"/>
+  <object id="5" name="office-backdrop" gid="13" x="0" y="560" width="900" height="560"/>
  </objectgroup>
  <objectgroup id="2" name="Reference Points">
-  <object id="1" name="start" class="start" x="320" y="224"><point/></object>
-  <object id="2" name="reception" x="256" y="144"><point/></object>
-  <object id="3" name="visitor" x="448" y="176"><point/></object>
-  <object id="4" name="secure-door" x="512" y="128"><point/></object>
+  <object id="1" name="start" class="start" x="360" y="270"><point/></object>
+  <object id="2" name="reception" x="270" y="190"><point/></object>
+  <object id="3" name="visitor" x="545" y="195"><point/></object>
+  <object id="4" name="secure-door" x="625" y="150"><point/></object>
  </objectgroup>
 </map>

@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "sync:shared": "node scripts/sync-shared.mjs",
-    "predev": "npm run sync:shared",
+    "generate:assets": "node scripts/generate-shared-assets.mjs",
+    "predev": "npm run sync:shared && npm run generate:assets",
     "dev": "vite",
-    "prebuild": "npm run sync:shared",
+    "prebuild": "npm run sync:shared && npm run generate:assets",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -27,6 +28,7 @@
     "@canvasengine/compiler": "2.1.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "path-browserify": "^1.0.1",
+    "sharp": "^0.34.3",
     "vite": "^8.2.0"
   }
 }

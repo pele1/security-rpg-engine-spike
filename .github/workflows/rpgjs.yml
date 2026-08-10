@@ -34,4 +34,8 @@ jobs:
           test -f dist/index.html
           test -f dist/data/scenario.json
           test -f dist/map/office-lobby.tmx
+          test -f dist/assets/shared/environment/office/reception-desk.png
+          test -f dist/assets/shared/environment/access-control/secure-door.png
+          test -f dist/assets/shared/scene/office-lobby-backdrop.png
+          test -f dist/map/office-lobby-backdrop.png
           ! grep -q 'mobile-controls.js' dist/index.html
