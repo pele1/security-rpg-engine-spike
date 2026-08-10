@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile, copyFile } from 'node:fs/promises'
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
@@ -9,9 +9,10 @@ const repoRoot = resolve(projectRoot, '..')
 const sharedRoot = resolve(repoRoot, 'shared', 'assets')
 const manifest = JSON.parse(await readFile(resolve(sharedRoot, 'manifest.json'), 'utf8'))
 const source = resolve(sharedRoot, manifest.source)
-const generatedRoot = resolve(projectRoot, 'public', 'assets', 'shared')
-const tiledGenerated = resolve(projectRoot, 'src', 'tiled', 'office-lobby-backdrop.png')
+const generatedRoot = resolve(sharedRoot, 'generated')
+const publishedIds = new Set(manifest.publishedAssetIds ?? manifest.assets.map(asset => asset.id))
 
+await rm(generatedRoot, { recursive: true, force: true })
 await mkdir(generatedRoot, { recursive: true })
 
 const sourceMeta = await sharp(source).metadata()
@@ -53,15 +54,9 @@ function safeExtract(asset) {
 
 const generated = new Map()
 for (const asset of manifest.assets) {
-  const target = resolve(generatedRoot, asset.path)
-  await mkdir(dirname(target), { recursive: true })
-
   const extract = safeExtract(asset)
   console.log(`Extracting ${asset.id}: ${JSON.stringify(extract)}`)
 
-  // Keep extraction and trimming as separate Sharp pipelines. Besides making
-  // failures easier to diagnose, this guarantees trim never changes the
-  // source geometry before the requested crop has been materialised.
   const extracted = await sharp(source)
     .extract(extract)
     .png()
@@ -72,8 +67,18 @@ for (const asset of manifest.assets) {
     .png()
     .toBuffer()
 
-  await writeFile(target, buffer)
-  generated.set(asset.id, { target, buffer })
+  generated.set(asset.id, { buffer })
+
+  if (publishedIds.has(asset.id)) {
+    const target = resolve(generatedRoot, asset.path)
+    await mkdir(dirname(target), { recursive: true })
+    await writeFile(target, buffer)
+    console.log(`Published ${asset.id} -> shared/assets/generated/${asset.path}`)
+  }
+}
+
+for (const id of publishedIds) {
+  if (!generated.has(id)) throw new Error(`publishedAssetIds contains unknown asset: ${id}`)
 }
 
 const [sceneWidth, sceneHeight] = manifest.scene.size
@@ -106,7 +111,6 @@ for (const placement of manifest.scene.placements) {
     continue
   }
 
-  // Crop an overlay if its scaled dimensions extend past the scene edge.
   const visibleWidth = Math.min(targetWidth, sceneWidth - placement.x)
   const visibleHeight = Math.min(targetHeight, sceneHeight - placement.y)
   const visible = (visibleWidth !== targetWidth || visibleHeight !== targetHeight)
@@ -123,6 +127,7 @@ await sharp({ create: { width: sceneWidth, height: sceneHeight, channels: 4, bac
   .png()
   .toFile(sceneTarget)
 
-await copyFile(sceneTarget, tiledGenerated)
-console.log(`Generated ${manifest.assets.length} shared assets and ${manifest.scene.output}`)
-console.log(`Synced scene backdrop -> ${tiledGenerated}`)
+const generatedReadme = `# Generated shared assets\n\nThese files are generated deterministically from \`${manifest.source}\` and \`shared/assets/manifest.json\`.\n\nThey are intentionally committed so they can be reviewed directly in GitHub and reused by multiple engines. Do not edit the PNGs manually; change the source atlas, crop/composition metadata, or generator and regenerate them instead.\n`
+await writeFile(resolve(generatedRoot, 'README.md'), generatedReadme)
+
+console.log(`Published ${publishedIds.size} reviewable assets and ${manifest.scene.output}`)
