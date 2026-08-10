@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="768" height="480" viewBox="0 0 768 480">
+  <defs>
+    <linearGradient id="floor" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e9e2d8"/><stop offset="0.52" stop-color="#cfd7d8"/><stop offset="1" stop-color="#aabcc0"/>
+    </linearGradient>
+    <linearGradient id="secureFloor" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#244d58"/><stop offset="1" stop-color="#122f38"/>
+    </linearGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#f1e8dc"/><stop offset="1" stop-color="#c7beb4"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#bff8ff" stop-opacity=".52"/><stop offset="1" stop-color="#4ea5bb" stop-opacity=".18"/>
+    </linearGradient>
+    <linearGradient id="deskFront" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#5c4436"/><stop offset="1" stop-color="#302a29"/>
+    </linearGradient>
+    <linearGradient id="blueGlow" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#25d9ff"/><stop offset="1" stop-color="#2477ff"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#001014" flood-opacity=".38"/></filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"/></filter>
+    <clipPath id="floorClip"><polygon points="384,38 742,218 384,430 26,218"/></clipPath>
+  </defs>
+
+  <ellipse cx="384" cy="242" rx="340" ry="180" fill="#09161d" opacity=".75" filter="url(#soft)"/>
+  <polygon points="384,38 742,218 384,430 26,218" fill="url(#floor)" stroke="#6d858d" stroke-width="3" filter="url(#shadow)"/>
+
+  <g clip-path="url(#floorClip)" opacity=".28" stroke="#7f969c" stroke-width="1">
+    <path d="M64 198L420 19M104 218L460 39M144 238L500 59M184 258L540 79M224 278L580 99M264 298L620 119M304 318L660 139M344 338L700 159M384 358L740 179"/>
+    <path d="M704 198L348 19M664 218L308 39M624 238L268 59M584 258L228 79M544 278L188 99M504 298L148 119M464 318L108 139M424 338L68 159"/>
+  </g>
+
+  <polygon points="498,96 742,218 564,324 320,202" fill="url(#secureFloor)" opacity=".95"/>
+  <path d="M498 96L742 218L564 324" fill="none" stroke="#35e4d5" stroke-width="3" opacity=".55"/>
+
+  <!-- left wall and branding -->
+  <g filter="url(#shadow)">
+    <polygon points="82,188 82,106 324,0 324,82" fill="url(#wall)" stroke="#8b8580" stroke-width="2"/>
+    <polygon points="82,106 324,0 346,10 104,118" fill="#6a6868"/>
+    <polygon points="116,150 116,116 286,42 286,76" fill="#f7f5f1" stroke="#9b9992"/>
+    <path d="M138 125l18-8 16 8-17 8z" fill="#0d6eb6"/><path d="M155 117v16" stroke="#53d8ff" stroke-width="3"/>
+    <text x="178" y="112" font-family="Arial,sans-serif" font-weight="800" font-size="17" fill="#163b69" transform="rotate(-23 178 112)">SECURECORP</text>
+  </g>
+
+  <!-- reception desk -->
+  <g filter="url(#shadow)">
+    <polygon points="128,246 230,194 326,240 224,294" fill="#f3eee5" stroke="#b7aea1" stroke-width="2"/>
+    <polygon points="128,246 128,220 224,268 224,294" fill="url(#deskFront)"/>
+    <polygon points="224,268 326,216 326,240 224,294" fill="#43352f"/>
+    <path d="M140 248L222 288L314 240" fill="none" stroke="url(#blueGlow)" stroke-width="5"/>
+    <polygon points="188,216 215,203 241,216 214,229" fill="#152731"/>
+    <polygon points="208,205 221,199 233,205 220,212" fill="#51d6f2"/>
+    <circle cx="270" cy="216" r="8" fill="#70bd75"/><rect x="266" y="220" width="8" height="8" rx="2" fill="#a4724e"/>
+  </g>
+
+  <!-- lounge -->
+  <g filter="url(#shadow)">
+    <polygon points="70,300 136,267 191,295 125,328" fill="#203f69"/>
+    <polygon points="76,288 136,258 184,282 124,312" fill="#315d91"/>
+    <polygon points="76,288 76,270 124,294 124,312" fill="#244d7c"/>
+    <polygon points="124,294 184,264 184,282 124,312" fill="#1c3e67"/>
+    <ellipse cx="187" cy="322" rx="34" ry="16" fill="#5f4937"/><ellipse cx="187" cy="316" rx="30" ry="13" fill="#aa7a52"/>
+  </g>
+
+  <!-- plants -->
+  <g filter="url(#shadow)">
+    <g transform="translate(96 205)"><ellipse cx="0" cy="35" rx="13" ry="6" fill="#28343a"/><rect x="-8" y="24" width="16" height="15" rx="2" fill="#aa7049"/><path d="M0 26C-22 16-24 0-11-4-4 6-3 12 0 21-1 4 7-10 18-8 16 5 9 15 2 24 15 9 29 12 26 23 14 31 7 28 0 26z" fill="#4fcf83"/></g>
+    <g transform="translate(286 134)"><ellipse cx="0" cy="35" rx="13" ry="6" fill="#28343a"/><rect x="-8" y="24" width="16" height="15" rx="2" fill="#b17b55"/><path d="M0 26C-18 15-20 0-9-4-3 7-2 13 0 22 0 4 8-12 18-8 17 6 9 16 2 25 15 9 28 12 25 23 14 31 7 28 0 26z" fill="#5bd58b"/></g>
+    <g transform="translate(612 244)"><ellipse cx="0" cy="35" rx="13" ry="6" fill="#28343a"/><rect x="-8" y="24" width="16" height="15" rx="2" fill="#b17b55"/><path d="M0 26C-18 15-20 0-9-4-3 7-2 13 0 22 0 4 8-12 18-8 17 6 9 16 2 25 15 9 28 12 25 23 14 31 7 28 0 26z" fill="#5bd58b"/></g>
+  </g>
+
+  <!-- secure entrance -->
+  <g filter="url(#shadow)">
+    <polygon points="388,146 476,102 548,138 460,184" fill="#27333a"/>
+    <polygon points="388,146 388,76 460,40 460,112" fill="#293941"/>
+    <polygon points="460,112 460,40 548,84 548,156" fill="#17272e"/>
+    <polygon points="402,132 402,88 456,61 456,105" fill="url(#glass)" stroke="#7ce8ef" stroke-width="2"/>
+    <polygon points="466,108 466,62 534,96 534,142" fill="url(#glass)" stroke="#66b9c9" stroke-width="2"/>
+    <rect x="548" y="110" width="14" height="28" rx="3" fill="#071319"/><rect x="552" y="115" width="6" height="8" rx="2" fill="#55e6d6"/>
+    <polygon points="414,73 474,43 524,68 464,99" fill="#11191d" stroke="#f55c5c" stroke-width="2"/>
+    <text x="438" y="71" font-family="Arial,sans-serif" font-size="10" font-weight="800" fill="#fff">SECURE AREA</text>
+  </g>
+
+  <!-- glass developer area -->
+  <g filter="url(#shadow)">
+    <polygon points="550,153 700,228 700,317 550,242" fill="url(#glass)" stroke="#7ad8e5" stroke-width="2"/>
+    <polygon points="550,153 612,122 762,196 700,228" fill="#d4fbff" fill-opacity=".22" stroke="#7ad8e5"/>
+    <path d="M600 178v90M650 203v90M700 228v89" stroke="#92e7ef" stroke-opacity=".55"/>
+    <polygon points="604,192 642,173 680,192 642,212" fill="#7c624d"/>
+    <polygon points="612,186 629,178 647,187 630,196" fill="#172832"/><rect x="624" y="182" width="11" height="4" fill="#4ee3ff"/>
+    <polygon points="648,244 686,225 724,244 686,264" fill="#7c624d"/>
+    <polygon points="657,237 674,229 692,238 675,247" fill="#172832"/><rect x="669" y="233" width="11" height="4" fill="#4ee3ff"/>
+    <polygon points="708,204 726,195 744,204 726,213" fill="#172832"/><rect x="722" y="199" width="9" height="3" fill="#4ee3ff"/>
+  </g>
+
+  <!-- server rack -->
+  <g filter="url(#shadow)">
+    <polygon points="648,316 668,306 688,316 668,326" fill="#0d1b21"/>
+    <polygon points="650,310 650,265 668,256 668,301" fill="#152b33"/>
+    <polygon points="668,301 668,256 688,266 688,311" fill="#243b45"/>
+    <g fill="#4bded2"><rect x="654" y="276" width="10" height="2"/><rect x="654" y="284" width="10" height="2"/><rect x="654" y="292" width="10" height="2"/></g>
+  </g>
+
+  <!-- subtle floor logo -->
+  <g opacity=".28" transform="translate(355 287) rotate(26)">
+    <path d="M0 0l24-12 24 12-24 12z" fill="none" stroke="#244f68" stroke-width="4"/>
+    <text x="-18" y="30" font-family="Arial,sans-serif" font-size="16" font-weight="800" fill="#244f68">SECURECORP</text>
+  </g>
+</svg>
