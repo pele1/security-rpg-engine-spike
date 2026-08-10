@@ -2,6 +2,13 @@
   "version": 1,
   "source": "source/office-asset-sheet-v1.png",
   "sourceSize": { "width": 1536, "height": 1024 },
+  "publishedAssetIds": [
+    "reception-desk",
+    "secure-door",
+    "security-gate",
+    "workstation-cluster",
+    "plants-set"
+  ],
   "assets": [
     { "id": "reception-desk", "path": "environment/office/reception-desk.png", "crop": [1135, 18, 399, 274], "tags": ["office", "furniture", "reception"] },
     { "id": "secure-door", "path": "environment/access-control/secure-door.png", "crop": [24, 327, 228, 323], "tags": ["access-control", "door", "secure"] },
